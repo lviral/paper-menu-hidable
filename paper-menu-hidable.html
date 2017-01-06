@@ -1,0 +1,136 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/image-icons.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="show-from-bottom-animation.html">
+<link rel="import" href="hide-on-bottom-animation.html">
+
+<!--
+`paper-menu-hidable`
+Hidable menu element
+
+@demo demo/index.html 
+-->
+
+<dom-module id="paper-menu-hidable">
+  <template>
+    <style>
+      :host {
+        display: block;
+        width: 100%;
+        background-color: #FFF;
+        height: 50px;
+      }
+      paper-material {
+          height: 100%;
+      }
+      .table {
+          display: table;
+          width: 100%;
+      }
+      .cell {
+          display: table-cell;
+          width: 20%;
+          text-align: center;
+      }
+      paper-input {
+          --paper-input-container-input: {
+              font-size: 20px;
+              height: 20px;
+              bottom: 20px;
+          };
+          --paper-input-container-underline: {
+              border-bottom: none;
+          };
+          --paper-input-container-underline-focus: {
+              border-bottom: none;
+          };
+      }
+    </style>
+    <paper-material elevation="2">
+        <div class="table">
+            <div class="cell">
+                <paper-icon-button icon="home" title="home"></paper-icon-button>
+            </div>
+            <div class="cell">
+                <paper-icon-button icon="image:collections" title="discover"></paper-icon-button>
+            </div>
+            <div class="cell">
+                <paper-icon-button icon="social:people" title="people"></paper-icon-button>
+            </div>
+            <div class="cell">
+                <paper-icon-button icon="social:notifications" title="notifications"></paper-icon-button>
+            </div>
+        </div>
+    </paper-material>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'paper-menu-hidable',
+      behaviors: [Polymer.NeonAnimationRunnerBehavior],
+      properties: {
+        controlScroll: {
+            type: Number,
+            value: 0
+        },
+        scrollTop: {
+          type: Number,
+          observer: '_scrollHandler'
+        },
+        open: {
+            value: true
+        },
+        animationConfig: {
+            value: function() {
+                return {
+                    'displayMenu': {
+                        name: 'show-from-bottom-animation',
+                        node: this
+
+                    },
+                    'hideMenu': {
+                        name: 'hide-on-bottom-animation',
+                        node: this
+                    }
+                }
+            }
+        }
+      },
+      listeners: {
+          'neon-animation-finish': '_hideAnimationFinish'
+      },
+      _displaySearch: function(){
+          this.style.display = 'inline-block';
+          this.playAnimation('displayMenu');
+      },
+      _hideSearch: function(){
+          this.playAnimation('hideMenu');
+      },
+      _scrollHandler: function() {
+          
+          if(this.scrollTop > this.controlScroll && this.open) {
+              this.controlScroll = this.scrollTop;
+              this.open = false;
+              this._hideSearch();
+          }
+          if(this.scrollTop < this.controlScroll && !this.open) {
+              this.controlScroll = this.scrollTop;
+              this.open = true;
+              this._displaySearch();
+          }
+          
+          this.controlScroll =this.scrollTop;
+      },
+      _hideAnimationFinish: function() {
+          if(!this.open)
+             this.style.display = 'none';
+      }
+    });
+  </script>
+</dom-module>
