@@ -1,7 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-icons/image-icons.html">
+<link rel="import" href="../iron-icons/places-icons.html">
 <link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-material/paper-material.html">
@@ -23,7 +25,7 @@ Hidable menu element
         display: block;
         width: 100%;
         background-color: #FFF;
-        height: 50px;
+        height: 45px;
       }
       paper-material {
           height: 100%;
@@ -50,22 +52,30 @@ Hidable menu element
               border-bottom: none;
           };
       }
+        
+        iron-selector .iron-selected {
+            color: var(--app-primary-color);
+        }
+      
     </style>
     <paper-material elevation="2">
-        <div class="table">
-            <div class="cell">
-                <paper-icon-button icon="home" title="home"></paper-icon-button>
-            </div>
-            <div class="cell">
-                <paper-icon-button icon="image:collections" title="discover"></paper-icon-button>
-            </div>
-            <div class="cell">
-                <paper-icon-button icon="social:people" title="people"></paper-icon-button>
-            </div>
-            <div class="cell">
-                <paper-icon-button icon="social:notifications" title="notifications"></paper-icon-button>
-            </div>
-        </div>
+        <iron-selector class="table" selected="{{view}}" attr-for-selected="name">
+                <div name="view1" class="cell">
+                    <paper-icon-button icon="event" title="view1" ></paper-icon-button>
+                </div>
+                <div name="view2" class="cell">
+                    <paper-icon-button icon="social:people" title="view2" ></paper-icon-button>
+                </div>
+                <div name="view3" class="cell">
+                    <paper-icon-button icon="social:whatshot" title="view3" ></paper-icon-button>
+                </div>
+                <div name="view4" class="cell">
+                    <paper-icon-button icon="places:fitness-center" title="view4" ></paper-icon-button>
+                </div>
+                <div name="view5" class="cell">
+                    <paper-icon-button icon="social:person" title="view5" ></paper-icon-button>
+                </div>
+        </iron-selector>
     </paper-material>
   </template>
 
@@ -100,6 +110,10 @@ Hidable menu element
                     }
                 }
             }
+        },
+        view: {
+            type: String,
+            notify: true
         }
       },
       listeners: {
@@ -111,6 +125,10 @@ Hidable menu element
       },
       _hideSearch: function(){
           this.playAnimation('hideMenu');
+      },
+      _menuSelect: function(e) {
+          console.log(e.currentTarget.title);
+          this.view = e.currentTarget.title;
       },
       _scrollHandler: function() {
           
